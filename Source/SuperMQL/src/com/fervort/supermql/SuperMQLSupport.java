@@ -5,30 +5,8 @@ import matrix.db.Context;
 import matrix.db.MQLCommand;
 import matrix.util.MatrixException;
 
-abstract public class GroovyScriptSupport extends Script{
+public class SuperMQLSupport {
 
-	String strScriptName;
-
-	public String getScriptName() {
-		return strScriptName;
-	}
-
-	public void setScriptName(String strScriptName) {
-		this.strScriptName = strScriptName;
-	}
-	
-	public String printScriptName() {
-		System.out.println("Script name is "+strScriptName);
-		return "";
-	}
-	
-	
-	
-	@Override
-	public Object run() {
-		//System.out.println("GroovyScriptSupport run method called");
-		return null;
-	}
 	Context context;
 	public void setCurrentContext(Context context)
 	{
