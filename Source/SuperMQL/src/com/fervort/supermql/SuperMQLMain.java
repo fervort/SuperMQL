@@ -1,5 +1,6 @@
 package com.fervort.supermql;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -50,8 +51,8 @@ public class SuperMQLMain {
 				System.out.print("Smql<"+i+">");
 				strUserInput = scanner.nextLine().trim();
 				
-				if(strUserInput.length()==0)// if enter multiple time
-					continue;
+				//if(strUserInput.length()==0)
+				//	continue;
 				
 				if(strUserInput.startsWith("."))
 				{
@@ -113,14 +114,19 @@ public class SuperMQLMain {
 		{
 			String[] aMyQueries = myQuery.split("=>");
 			
-			try (OutputStream output = new FileOutputStream("SuperMQL.properties")) {
+			File file = new File("SuperMQL.properties");
+			
+			System.out.println("Writing to "+file.getAbsolutePath());
+			
+			try (OutputStream outProperties = new FileOutputStream(file,true)) {
 
+				
 	            Properties prop = new Properties();
 
 	            // set the properties value
 	            prop.setProperty(aMyQueries[0], aMyQueries[1]);
 	         
-	            prop.store(output, null);
+	            prop.store(outProperties, null);
 
 	            System.out.println(prop);
 
