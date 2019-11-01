@@ -19,10 +19,26 @@ public class SuperMQLMain {
 
 	public static void main(String[] args) throws IOException, MatrixException {
 	
-		System.out.println("Invalid Call !");
-		System.out.println("Call function invokeSuperMQL(Context context,String[] args) from JPO");
-		new SuperMQLMain().invokeSuperMQL(null, args);
-		
+		//System.out.println("Invalid Call !");
+		//System.out.println("Call function invokeSuperMQL(Context context,String[] args) from JPO");
+		SuperMQLSupport sms = new SuperMQLSupport();
+		if(args.length>=4)
+		{
+			try {
+				Context localContext = sms.createEnoviaContext(args);
+				new SuperMQLMain().invokeSuperMQL(localContext, args);
+				sms.closeContextAndCommand();
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}else
+		{
+			System.out.println("Syntax: java -jar SuperMQL.jar host username password vault");
+			System.out.println("");
+			System.out.println("Example: java -jar SuperMQL.jar \"http://3dspace:8070/internal\" \"creator\" \"pass123\" \"eService Production\" ");
+		}
 	}
 	
 	public void invokeSuperMQL(Context context,String[] args) throws IOException, MatrixException
@@ -105,6 +121,9 @@ public class SuperMQLMain {
 			}while(!strUserInput.equalsIgnoreCase("quit") && !strUserInput.equalsIgnoreCase("exit"));
 			System.out.println("Bye Bye :)");
 			
+			scanner.close();
+			// TODO check comment
+			//gss.closeContextAndCommand();
 		}
 	}
 	List myQueries = new ArrayList<String>();

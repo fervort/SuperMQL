@@ -1,6 +1,5 @@
 package com.fervort.supermql;
 
-import groovy.lang.Script;
 import matrix.db.Context;
 import matrix.db.MQLCommand;
 import matrix.util.MatrixException;
@@ -35,5 +34,40 @@ public class SuperMQLSupport {
 		mqlCommand = new MQLCommand();
 		mqlCommand.open(this.context);
 		//System.out.println("Build MQL Command");
+	}
+	/**
+	 * What happen when context of MQL prompt is closed ?
+	 */
+	public void closeContextAndCommand()
+	{
+		try {
+			this.mqlCommand.close(context);
+			this.context.shutdown();
+		} catch (MatrixException e) {
+			
+			System.out.println("Exception in closeContextAndCommand() "+e);
+			e.printStackTrace();
+		}
+	}
+	
+	Context createEnoviaContext(String[] args) throws Exception {
+		
+		String strEnoviaHost = args[0];
+		String strEnoviaUsername= args[1];
+		String strEnoviaPassword = args[2];
+		String strEnoviaVault = args[3];
+		
+		Context localContext  = new Context(strEnoviaHost);
+
+		localContext.setUser(strEnoviaUsername);
+		localContext.setPassword(strEnoviaPassword);
+		localContext.setVault(strEnoviaVault);
+		localContext.connect();
+		if (!localContext.isConnected())
+		{
+			throw new Exception("Failed to connect to Enovia : " + strEnoviaHost);
+		}
+		//System.out.println("Connected to Enovia : "+strEnoviaHost);
+		return localContext;
 	}
 }
