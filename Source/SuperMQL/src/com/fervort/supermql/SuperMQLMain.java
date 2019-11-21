@@ -22,9 +22,10 @@ public class SuperMQLMain {
 		//System.out.println("Invalid Call !");
 		//System.out.println("Call function invokeSuperMQL(Context context,String[] args) from JPO");
 		SuperMQLSupport sms = new SuperMQLSupport();
-		if(args.length>=4)
+		if(args.length>=5 && args[0].trim().equalsIgnoreCase("-login"))
 		{
 			try {
+				 //Context localContext = 	null ; //sms.createEnoviaContext(args);
 				Context localContext = sms.createEnoviaContext(args);
 				new SuperMQLMain().invokeSuperMQL(localContext, args);
 				sms.closeContextAndCommand();
@@ -35,16 +36,16 @@ public class SuperMQLMain {
 			
 		}else
 		{
-			System.out.println("Syntax: java -jar SuperMQL.jar host username password vault");
+			System.out.println("Syntax: java -jar SuperMQL.jar -login host username password vault");
 			System.out.println("");
-			System.out.println("Example: java -jar SuperMQL.jar \"http://3dspace:8070/internal\" \"creator\" \"pass123\" \"eService Production\" ");
+			System.out.println("Example: java -jar SuperMQL.jar -login \"http://3dspace:8070/internal\" \"creator\" \"pass123\" \"eService Production\" ");
 		}
 	}
 	
 	public void invokeSuperMQL(Context context,String[] args) throws IOException, MatrixException
 	{
 		// if passed directly execute as script
-		if(args.length>=1)
+		if(args.length>=1 && !args[0].trim().equalsIgnoreCase("-login"))
 		{	
 			String fileContent = new String(Files.readAllBytes(Paths.get(args[0])), StandardCharsets.UTF_8); 
 			
@@ -110,7 +111,12 @@ public class SuperMQLMain {
 					{
 						System.out.println(ex);	
 					}
-				}else if(strUserInput.startsWith("myq "))
+				}else if(strUserInput.startsWith("mode adv"))
+				{
+					AdvanceReader.startAdvanceMode(gss);
+					System.out.println("Returned to normal mode");
+				}
+				else if(strUserInput.startsWith("myq "))
 				{
 					storeMyQuery(strUserInput);
 				}
