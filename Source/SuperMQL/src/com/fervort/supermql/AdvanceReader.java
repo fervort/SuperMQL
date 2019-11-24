@@ -14,6 +14,7 @@ import org.jline.reader.Completer;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.MaskingCallback;
 import org.jline.reader.UserInterruptException;
 import org.jline.reader.impl.completer.*;
 
@@ -111,9 +112,14 @@ public class AdvanceReader {
 		
 		return true;
 	}
+	
+	AttributedStringBuilder rightPrompt = new AttributedStringBuilder()
+			.append("adv", AttributedStyle.BOLD.foreground(AttributedStyle.MAGENTA))
+			;
+	
 	private String readLine(LineReader reader, int iCounter) {
 		try {
-			String line = reader.readLine("Smql<"+iCounter+"> ");
+			String line = reader.readLine("Smql<"+iCounter+"> ",rightPrompt.toAnsi(),(MaskingCallback) null, null);
 			return line.trim();
 		}
 		catch (UserInterruptException e) {

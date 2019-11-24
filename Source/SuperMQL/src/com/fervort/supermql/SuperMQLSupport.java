@@ -40,12 +40,28 @@ public class SuperMQLSupport {
 	 */
 	public void closeContextAndCommand()
 	{
+		closeCommand();
+		shutdownContext();
+	}
+	
+	public void shutdownContext()
+	{
 		try {
-			this.mqlCommand.close(context);
 			this.context.shutdown();
 		} catch (MatrixException e) {
 			
-			System.out.println("Exception in closeContextAndCommand() "+e);
+			System.out.println("Exception in shutdownContext() "+e);
+			e.printStackTrace();
+		}
+	}
+	
+	public void closeCommand()
+	{
+		try {
+			this.context.shutdown();
+		} catch (MatrixException e) {
+			
+			System.out.println("Exception in closeCommand() "+e);
 			e.printStackTrace();
 		}
 	}

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
+import com.fervort.supermql.xml.ConfigReader;
+
 import matrix.db.Context;
 import matrix.util.MatrixException;
 
@@ -19,16 +21,25 @@ public class SuperMQLMain {
 
 	public static void main(String[] args) throws IOException, MatrixException {
 	
+		new SuperMQLMain().startAsStandalone(args);
+		
+	}
+	
+	public void startAsStandalone(String[] args)
+	{
 		//System.out.println("Invalid Call !");
 		//System.out.println("Call function invokeSuperMQL(Context context,String[] args) from JPO");
 		SuperMQLSupport sms = new SuperMQLSupport();
 		if(args.length>=5 && args[0].trim().equalsIgnoreCase("-login"))
 		{
 			try {
-				 //Context localContext = 	null ; //sms.createEnoviaContext(args);
+				//Context localContext = 	null ; //sms.createEnoviaContext(args);
 				Context localContext = sms.createEnoviaContext(args);
-				new SuperMQLMain().invokeSuperMQL(localContext, args);
-				sms.closeContextAndCommand();
+				invokeSuperMQL(localContext, args);
+				// TODO Can't close command here as it is started from another instance
+				//sms.closeCommand();
+				sms.shutdownContext();
+				
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -116,6 +127,10 @@ public class SuperMQLMain {
 					AdvanceReader.startAdvanceMode(gss);
 					System.out.println("Returned to normal mode");
 				}
+				else if(strUserInput.startsWith("config"))
+				{
+					ConfigHandler.processConfigCommand(strUserInput);
+				}
 				else if(strUserInput.startsWith("myq "))
 				{
 					storeMyQuery(strUserInput);
@@ -128,8 +143,10 @@ public class SuperMQLMain {
 			System.out.println("Bye Bye :)");
 			
 			scanner.close();
-			// TODO check comment
-			//gss.closeContextAndCommand();
+			
+			gss.closeCommand();
+			// No need to close context as MQL context is being used
+			//gss.shutdownContext();
 		}
 	}
 	List myQueries = new ArrayList<String>();
