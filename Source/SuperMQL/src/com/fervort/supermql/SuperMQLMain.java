@@ -12,7 +12,13 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.xml.sax.SAXException;
+
 import com.fervort.supermql.xml.ConfigReader;
+import com.fervort.supermql.xml.MyQueryReader;
 
 import matrix.db.Context;
 import matrix.util.MatrixException;
@@ -20,7 +26,7 @@ import matrix.util.MatrixException;
 public class SuperMQLMain {
 
 	public static void main(String[] args) throws IOException, MatrixException {
-	
+		
 		new SuperMQLMain().startAsStandalone(args);
 		
 	}
@@ -53,7 +59,7 @@ public class SuperMQLMain {
 		}
 	}
 	
-	public void invokeSuperMQL(Context context,String[] args) throws IOException, MatrixException
+	public void invokeSuperMQL(Context context,String[] args) throws IOException, MatrixException, ParserConfigurationException, SAXException, TransformerException
 	{
 		// if passed directly execute as script
 		if(args.length>=1 && !args[0].trim().equalsIgnoreCase("-login"))
@@ -63,87 +69,96 @@ public class SuperMQLMain {
 			new GroovyScriptBuilder().buildGroovyScript(context,fileContent);
 		}else
 		{	
+			
 			SuperMQLSupport gss = new SuperMQLSupport();
 			gss.setCurrentContext(context);
 			gss.buildMQLCommand();
 			
-			Scanner scanner = new Scanner(System.in);
+			ConfigReader.initializeConfiguration();
 			
-			printWelcomeMessage();
-			
-			int i=1;
-			
-			String strUserInput;
-			do
+			if(ConfigReader.readConfigKey("EditorMode").equalsIgnoreCase("basic"))
 			{
-				System.out.print("Smql<"+i+">");
-				strUserInput = scanner.nextLine().trim();
 				
-				//if(strUserInput.length()==0)
-				//	continue;
+				Scanner scanner = new Scanner(System.in);
 				
-				if(strUserInput.startsWith("."))
+				printWelcomeMessage();
+				
+				System.out.println("EditorMode : 'basic' is deprecated. It will be removed in next release. Please use advance mode ");
+				System.out.println();
+				
+				int i=1;
+				
+				String strUserInput;
+				do
 				{
-					String strAsMQL = strUserInput;
-					try
-					{
-						String strMQL = strAsMQL.substring(1, strAsMQL.length()).trim();
-						String strResult = gss.mql(strMQL);
-						System.out.println(strResult);
-					}catch(Exception ex)
-					{
-						System.out.println(ex);
-					}
-				//it is script	
-				}
-				else if(strUserInput.startsWith("f ")) 
-				{
-					try
-					{
-						String filePath = strUserInput.substring(1, strUserInput.length()).trim();
-						// TODO check file is valid ?
-						String fileContent = new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8); 
-						new GroovyScriptBuilder().buildGroovyScript(context,fileContent);
-					}catch(Exception ex)
-					{
-						System.out.println(ex);	
-					}
-				}
-				//else if(!strUserInput.equalsIgnoreCase("quit") && !strUserInput.equalsIgnoreCase("exit"))
-				else if(strUserInput.startsWith("i "))
-				{
-					try
-					{
-					// TODO add try catch block otherwise if something will fail, control will go out of loop
-					new GroovyScriptBuilder().buildGroovyScript(context,strUserInput.substring(1, strUserInput.length()).trim());
-					System.out.println("");
+					System.out.print("Smql<"+i+">");
+					strUserInput = scanner.nextLine().trim();
 					
-					}catch(Exception ex)
+					//if(strUserInput.length()==0)
+					//	continue;
+					
+					if(strUserInput.startsWith("."))
 					{
-						System.out.println(ex);	
+						String strAsMQL = strUserInput;
+						try
+						{
+							String strMQL = strAsMQL.substring(1, strAsMQL.length()).trim();
+							String strResult = gss.mql(strMQL);
+							System.out.println(strResult);
+						}catch(Exception ex)
+						{
+							System.out.println(ex);
+						}
+					//it is script	
 					}
-				}else if(strUserInput.startsWith("mode adv"))
-				{
-					AdvanceReader.startAdvanceMode(gss);
-					System.out.println("Returned to normal mode");
-				}
-				else if(strUserInput.startsWith("config"))
-				{
-					ConfigHandler.processConfigCommand(strUserInput);
-				}
-				else if(strUserInput.startsWith("myq "))
-				{
-					storeMyQuery(strUserInput);
-				}
+					else if(strUserInput.startsWith("f ")) 
+					{
+						try
+						{
+							String filePath = strUserInput.substring(1, strUserInput.length()).trim();
+							// TODO check file is valid ?
+							String fileContent = new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8); 
+							new GroovyScriptBuilder().buildGroovyScript(context,fileContent);
+						}catch(Exception ex)
+						{
+							System.out.println(ex);	
+						}
+					}
+					//else if(!strUserInput.equalsIgnoreCase("quit") && !strUserInput.equalsIgnoreCase("exit"))
+					else if(strUserInput.startsWith("i "))
+					{
+						try
+						{
+						// TODO add try catch block otherwise if something will fail, control will go out of loop
+						new GroovyScriptBuilder().buildGroovyScript(context,strUserInput.substring(1, strUserInput.length()).trim());
+						System.out.println("");
+						
+						}catch(Exception ex)
+						{
+							System.out.println(ex);	
+						}
+					}
+					else if(strUserInput.startsWith("config"))
+					{
+						ConfigHandler.processConfigCommand(strUserInput);
+					}
+					else if(strUserInput.startsWith("myq "))
+					{
+						storeMyQuery(strUserInput);
+					}
+					
+					
+					
+					i++;
+				}while(!strUserInput.equalsIgnoreCase("quit") && !strUserInput.equalsIgnoreCase("exit"));
+				System.out.println("Bye Bye :)");
 				
 				
-				
-				i++;
-			}while(!strUserInput.equalsIgnoreCase("quit") && !strUserInput.equalsIgnoreCase("exit"));
-			System.out.println("Bye Bye :)");
-			
-			scanner.close();
-			
+				scanner.close();
+			}else
+			{
+				AdvanceReader.startAdvanceMode(gss);
+			}
 			gss.closeCommand();
 			// No need to close context as MQL context is being used
 			//gss.shutdownContext();

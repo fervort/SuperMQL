@@ -8,7 +8,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -20,12 +19,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class ConfigReader {
+public class MyQueryReader {
 
 	public static Document doc;
 	public static String configPath;
 	
-	private static final String XML_CONFIG_FILE_NAME = "SuperMQL.Config.xml" ;
+	private static final String XML_CONFIG_FILE_NAME = "SuperMQL.MyQuery.xml" ;
 	
 	/*
 	public static String getConfigPath() { 
@@ -37,28 +36,42 @@ public class ConfigReader {
 	}
 	*/
 	
-	// TODO need rework on complete class, change acccess specifier, method static or instance 
-	public static void initializeConfiguration() throws ParserConfigurationException, IOException, SAXException, TransformerException
+	public static void addNewMyQuery(String strMyQuery,String strNativeQuery) throws ParserConfigurationException, IOException, SAXException, TransformerException
 	{
 		File xmlFile = new File(XML_CONFIG_FILE_NAME);
 		
 		if(xmlFile.exists())
 		{
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-			doc = docBuilder.parse(xmlFile);
+			//DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			//DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			//doc = docBuilder.parse(xmlFile);
+			doc = getXMLDocument(MODE_XML_UPDATE,xmlFile);
+			
 			doc.getDocumentElement().normalize();
 			
-			configPath=xmlFile.getCanonicalPath();
+			NodeList nQueries = (NodeList) doc.getElementsByTagName("Queries");	
+			if(nQueries.getLength()>=1)
+			{
+				Element eQueries = (Element) nQueries.item(0);
+				
+				addNewMyQuery(eQueries,"sss","lll");
+				
+				saveXMLDocument(doc, XML_CONFIG_FILE_NAME);
+			}
 			
 		}else
 		{
 
 			doc = getXMLDocument(MODE_XML_CREATE);
-            Element superConfigRoot = doc.createElement("SuperMQLConfiguration");
-            doc.appendChild(superConfigRoot);
+            Element superMQLMyQuery = doc.createElement("SuperMQLMyQuery");
+            doc.appendChild(superMQLMyQuery);
             
-            addNodeWithTextContentToXML(doc,superConfigRoot,"IsConfigCreated","yes");
+            //addNodeToXML(doc,superMQLMyQuery,"IsConfigCreated","yes");
+            
+            Element eQueries = doc.createElement("Queries");
+            superMQLMyQuery.appendChild(eQueries);
+            
+            addNewMyQuery(eQueries,"bus * * *", "temp query bus * * *");
             
             configPath=saveXMLDocument(doc, XML_CONFIG_FILE_NAME);
            
@@ -69,6 +82,33 @@ public class ConfigReader {
             */
 		}
 
+	}
+	private static void addNewMyQuery(Element eQueries,String strMyQuery,String strNativeQuery)
+	{
+		Element eQuery = doc.createElement("Query");
+		eQueries.appendChild(eQuery);
+		
+		addNodeWithTextContentToXML(doc,eQuery,"MyQuery",strMyQuery);
+		addNodeWithTextContentToXML(doc,eQuery,"NativeQuery",strNativeQuery);
+	}
+	
+	private static void openFileAndCreateElement2(String strFileName,String elementName,String elementValue) throws ParserConfigurationException, SAXException, IOException, TransformerException
+	{
+		File xmlFile = new File(strFileName);
+		Document document = getXMLDocument(MODE_XML_UPDATE,xmlFile);
+        
+		Element superMQLMyQuery = doc.createElement("SuperMQLMyQuery");
+        doc.appendChild(superMQLMyQuery);
+        
+        //addNodeToXML(doc,superMQLMyQuery,"IsConfigCreated","yes");
+        
+        Element eQueries = doc.createElement("Queries");
+        superMQLMyQuery.appendChild(eQueries);
+        
+        addNewMyQuery(eQueries,"bus * * *", "temp query bus * * *");
+        
+        saveXMLDocument(doc, strFileName);
+        
 	}
 	
 	private static void openFileAndCreateElement(String strFileName,String elementName,String elementValue) throws ParserConfigurationException, SAXException, IOException, TransformerException
@@ -177,3 +217,4 @@ public class ConfigReader {
 	}
 	
 }
+

@@ -1,6 +1,5 @@
 package com.fervort.supermql;
 
-import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -90,16 +89,21 @@ public class AdvanceReader {
 			{
 				System.out.println(ex);	
 			}
-		} else if ("exit".equals(strUserInput)) {
+		} else if ("exit".equalsIgnoreCase(strUserInput)) {
 			
 			AttributedStringBuilder a = new AttributedStringBuilder()
-			.append("You will be returned to normal mode. You can use ")
-			.append("mode adv", AttributedStyle.BOLD.foreground(AttributedStyle.GREEN))
-			.append(" again to enter into advance mode.");
-			
+			//.append("You will be returned to normal mode. You can use ")
+			.append("Bye Bye !", AttributedStyle.BOLD.foreground(AttributedStyle.GREEN))
+			//.append(" again to enter into advance mode.");
+			;
+				
 			System.out.println(a.toAnsi());
 			
 			return false;
+		}
+		else if(strUserInput.startsWith("config"))
+		{
+			ConfigHandler.processConfigCommand(strUserInput);
 		}
 		else if(strUserInput.startsWith("myq "))
 		{
@@ -144,9 +148,28 @@ public class AdvanceReader {
 		// setup commands
 		commandsToComplete = new String[] { "exit", "mql", ". temp query bus TYPE NAME REV", ". print bus" };
 		
+		printAdanceReaderHelp();
 		System.out.println("You are in Advance mode. Press TAB for list of auto complete commands.");
 	}
 	
+	private void printAdanceReaderHelp()
+	{
+		// TODO Show tip of the day before starting
+		AttributedStringBuilder aHelp = new AttributedStringBuilder()
+		.append("Welcome to SuperMQL", AttributedStyle.BOLD.foreground(AttributedStyle.GREEN)).append("\n")
+		;
+		System.out.println(aHelp.toAnsi());
+		System.out.println("");
+		System.out.println("To execute native mql start with dot, For ex=> Smql<1>.temp query bus or Smql<3>.print bus");
+		System.out.println("");
+		System.out.println("To execute java/groovy script from file: Smql<1>f D:\\Project\\script\\RenameBus.groovy");
+		System.out.println("");
+		System.out.println("To execute java/groovy script in Interactive mode: Smql<1>i def x = 100; println x;");
+		System.out.println("MQL funcion: Smql<1>i def result=mql('list vault *'); print result");
+		System.out.println("");
+		System.out.println("SuperMQL, Version 0.0.0.alpha");
+		System.out.println("");
+	}
 	private void closeAdvanceReader()
 	{
 		AnsiConsole.systemUninstall();
