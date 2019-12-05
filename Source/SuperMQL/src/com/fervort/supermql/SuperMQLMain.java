@@ -26,6 +26,17 @@ import matrix.util.MatrixException;
 public class SuperMQLMain {
 
 	public static void main(String[] args) throws IOException, MatrixException {
+		/*
+		try
+		{
+			MyQueryReader.addNewMyQuery("abc","def");
+			
+		}catch(Exception ex)
+		{
+			System.out.println(ex);
+		}
+		*/
+		System.out.println("done");
 		
 		new SuperMQLMain().startAsStandalone(args);
 		
@@ -33,23 +44,33 @@ public class SuperMQLMain {
 	
 	public void startAsStandalone(String[] args)
 	{
-		//System.out.println("Invalid Call !");
-		//System.out.println("Call function invokeSuperMQL(Context context,String[] args) from JPO");
-		SuperMQLSupport sms = new SuperMQLSupport();
+
 		if(args.length>=5 && args[0].trim().equalsIgnoreCase("-login"))
-		{
-			try {
-				//Context localContext = 	null ; //sms.createEnoviaContext(args);
-				Context localContext = sms.createEnoviaContext(args);
-				invokeSuperMQL(localContext, args);
-				// TODO Can't close command here as it is started from another instance
-				//sms.closeCommand();
-				sms.shutdownContext();
+		{	
+			isStandaloneMode = true;
+			
+			do {
+				bRestartRequired = false;
+				try {
+					SuperMQLSupport sms = new SuperMQLSupport();
+					Context localContext = 	null ; //sms.createEnoviaContext(args);
+					//Context localContext = sms.createEnoviaContext(args);
+					invokeSuperMQL(localContext, args);
+					// TODO Can't close command here as it is started from another instance
+					//sms.closeCommand();
+					sms.shutdownByContext(localContext);
+					
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				
+				if(bRestartRequired==true)
+				{
+					System.out.println("Restarting SuperMQL...");
+				}
 				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			}while(bRestartRequired==true);
 			
 		}else
 		{
@@ -58,6 +79,9 @@ public class SuperMQLMain {
 			System.out.println("Example: java -jar SuperMQL.jar -login \"http://3dspace:8070/internal\" \"creator\" \"pass123\" \"eService Production\" ");
 		}
 	}
+	
+	static boolean bRestartRequired = false;
+	static boolean isStandaloneMode = false;
 	
 	public void invokeSuperMQL(Context context,String[] args) throws IOException, MatrixException, ParserConfigurationException, SAXException, TransformerException
 	{
@@ -141,6 +165,18 @@ public class SuperMQLMain {
 					else if(strUserInput.startsWith("config"))
 					{
 						ConfigHandler.processConfigCommand(strUserInput);
+					}
+					else if(strUserInput.startsWith("restart"))
+					{
+						if(isStandaloneMode)
+						{
+							bRestartRequired= true;
+							strUserInput = "exit";
+							
+						}else
+						{
+							System.out.println("Restart mode is only supported in standalone mode.");
+						}
 					}
 					else if(strUserInput.startsWith("myq "))
 					{

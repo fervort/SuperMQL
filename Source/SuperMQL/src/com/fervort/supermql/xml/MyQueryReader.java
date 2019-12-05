@@ -54,7 +54,7 @@ public class MyQueryReader {
 			{
 				Element eQueries = (Element) nQueries.item(0);
 				
-				addNewMyQuery(eQueries,"sss","lll");
+				addNewMyQuery(eQueries,strMyQuery,strNativeQuery);
 				
 				saveXMLDocument(doc, XML_CONFIG_FILE_NAME);
 			}
@@ -71,7 +71,7 @@ public class MyQueryReader {
             Element eQueries = doc.createElement("Queries");
             superMQLMyQuery.appendChild(eQueries);
             
-            addNewMyQuery(eQueries,"bus * * *", "temp query bus * * *");
+            addNewMyQuery(eQueries,strMyQuery, strNativeQuery);
             
             configPath=saveXMLDocument(doc, XML_CONFIG_FILE_NAME);
            

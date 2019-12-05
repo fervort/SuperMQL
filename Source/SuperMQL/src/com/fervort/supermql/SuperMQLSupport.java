@@ -46,8 +46,13 @@ public class SuperMQLSupport {
 	
 	public void shutdownContext()
 	{
+		shutdownByContext(this.context);
+	}
+	
+	public void shutdownByContext(Context localContext)
+	{
 		try {
-			this.context.shutdown();
+			localContext.shutdown();
 		} catch (MatrixException e) {
 			
 			System.out.println("Exception in shutdownContext() "+e);
@@ -68,10 +73,10 @@ public class SuperMQLSupport {
 	
 	Context createEnoviaContext(String[] args) throws Exception {
 		
-		String strEnoviaHost = args[0];
-		String strEnoviaUsername= args[1];
-		String strEnoviaPassword = args[2];
-		String strEnoviaVault = args[3];
+		String strEnoviaHost = args[1];
+		String strEnoviaUsername= args[2];
+		String strEnoviaPassword = args[3];
+		String strEnoviaVault = args[4];
 		
 		Context localContext  = new Context(strEnoviaHost);
 
