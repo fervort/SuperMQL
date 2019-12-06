@@ -101,18 +101,6 @@ public class AdvanceReader {
 			
 			return false;
 		}
-		else if(strUserInput.startsWith("restart"))
-		{
-			if(SuperMQLMain.isStandaloneMode)
-			{
-				SuperMQLMain.bRestartRequired= true;
-				//strUserInput = "exit";
-				return false;
-			}else
-			{
-				System.out.println("Restart mode is only supported in standalone mode.");
-			}
-		}
 		else if(strUserInput.startsWith("config"))
 		{
 			ConfigHandler.processConfigCommand(strUserInput);

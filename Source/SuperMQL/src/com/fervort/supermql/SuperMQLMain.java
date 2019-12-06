@@ -8,9 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -28,17 +26,6 @@ import matrix.util.MatrixException;
 public class SuperMQLMain {
 
 	public static void main(String[] args) throws IOException, MatrixException {
-		/*
-		try
-		{
-			MyQueryReader.addNewMyQuery("abc","def");
-			
-		}catch(Exception ex)
-		{
-			System.out.println(ex);
-		}
-		*/
-		System.out.println("done");
 		
 		new SuperMQLMain().startAsStandalone(args);
 		
@@ -46,33 +33,23 @@ public class SuperMQLMain {
 	
 	public void startAsStandalone(String[] args)
 	{
-
+		//System.out.println("Invalid Call !");
+		//System.out.println("Call function invokeSuperMQL(Context context,String[] args) from JPO");
+		SuperMQLSupport sms = new SuperMQLSupport();
 		if(args.length>=5 && args[0].trim().equalsIgnoreCase("-login"))
-		{	
-			isStandaloneMode = true;
-			
-			do {
-				bRestartRequired = false;
-				try {
-					SuperMQLSupport sms = new SuperMQLSupport();
-					Context localContext = 	null ; //sms.createEnoviaContext(args);
-					//Context localContext = sms.createEnoviaContext(args);
-					invokeSuperMQL(localContext, args);
-					// TODO Can't close command here as it is started from another instance
-					//sms.closeCommand();
-					sms.shutdownByContext(localContext);
-					
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		{
+			try {
+				//Context localContext = 	null ; //sms.createEnoviaContext(args);
+				Context localContext = sms.createEnoviaContext(args);
+				invokeSuperMQL(localContext, args);
+				// TODO Can't close command here as it is started from another instance
+				//sms.closeCommand();
+				sms.shutdownByContext(localContext);
 				
-				if(bRestartRequired==true)
-				{
-					System.out.println("Restarting SuperMQL...");
-				}
 				
-			}while(bRestartRequired==true);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			
 		}else
 		{
@@ -81,9 +58,6 @@ public class SuperMQLMain {
 			System.out.println("Example: java -jar SuperMQL.jar -login \"http://3dspace:8070/internal\" \"creator\" \"pass123\" \"eService Production\" ");
 		}
 	}
-	
-	static boolean bRestartRequired = false;
-	static boolean isStandaloneMode = false;
 	
 	public void invokeSuperMQL(Context context,String[] args) throws IOException, MatrixException, ParserConfigurationException, SAXException, TransformerException
 	{
@@ -105,7 +79,7 @@ public class SuperMQLMain {
 			if(ConfigReader.readConfigKey("EditorMode").equalsIgnoreCase("basic"))
 			{
 				
-				Scanner scanner = getScanner();
+				Scanner scanner = new Scanner(System.in);
 				
 				printWelcomeMessage();
 				
@@ -115,11 +89,9 @@ public class SuperMQLMain {
 				int i=1;
 				
 				String strUserInput;
-				
 				do
 				{
 					System.out.print("Smql<"+i+">");
-					//strUserInput = scanner.hasNextLine()?scanner.nextLine().trim():"super";
 					strUserInput = scanner.nextLine().trim();
 					
 					//if(strUserInput.length()==0)
@@ -170,18 +142,6 @@ public class SuperMQLMain {
 					{
 						ConfigHandler.processConfigCommand(strUserInput);
 					}
-					else if(strUserInput.startsWith("restart"))
-					{
-						if(isStandaloneMode)
-						{
-							bRestartRequired= true;
-							strUserInput = "exit";
-							
-						}else
-						{
-							System.out.println("Restart mode is only supported in standalone mode.");
-						}
-					}
 					else if(strUserInput.startsWith("myq "))
 					{
 						storeMyQuery(strUserInput);
@@ -193,8 +153,9 @@ public class SuperMQLMain {
 				}while(!strUserInput.equalsIgnoreCase("quit") && !strUserInput.equalsIgnoreCase("exit"));
 				System.out.println("Bye Bye :)");
 				
-				// Don't close scanner as we are using System.in . It will close System.in as well.
+				// Don't close Scanner as System.in is used in Scanner constructor.
 				//scanner.close();
+				
 			}else
 			{
 				AdvanceReader.startAdvanceMode(gss);
@@ -204,25 +165,6 @@ public class SuperMQLMain {
 			//gss.shutdownContext();
 		}
 	}
-	
-	Map mActiveStore = new HashMap<String, Object>();
-	
-	private Scanner getScanner()
-	{
-		if(mActiveStore.containsKey(Constants.SCANNER_OBJ))
-		{
-			System.out.println("Reusing Scanner");
-			return (Scanner)mActiveStore.get(Constants.SCANNER_OBJ);
-		}
-		else
-		{
-			System.out.println("Creating new Scanner");
-			Scanner scanner = new Scanner(System.in);
-			mActiveStore.put(Constants.SCANNER_OBJ,scanner);
-			return scanner;
-		}
-	}
-	
 	List myQueries = new ArrayList<String>();
 	private void storeMyQuery(String myQuery)
 	{
