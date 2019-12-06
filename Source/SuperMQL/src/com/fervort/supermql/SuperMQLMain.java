@@ -8,7 +8,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -103,7 +105,7 @@ public class SuperMQLMain {
 			if(ConfigReader.readConfigKey("EditorMode").equalsIgnoreCase("basic"))
 			{
 				
-				Scanner scanner = new Scanner(System.in);
+				Scanner scanner = getScanner();
 				
 				printWelcomeMessage();
 				
@@ -113,9 +115,11 @@ public class SuperMQLMain {
 				int i=1;
 				
 				String strUserInput;
+				
 				do
 				{
 					System.out.print("Smql<"+i+">");
+					//strUserInput = scanner.hasNextLine()?scanner.nextLine().trim():"super";
 					strUserInput = scanner.nextLine().trim();
 					
 					//if(strUserInput.length()==0)
@@ -189,8 +193,8 @@ public class SuperMQLMain {
 				}while(!strUserInput.equalsIgnoreCase("quit") && !strUserInput.equalsIgnoreCase("exit"));
 				System.out.println("Bye Bye :)");
 				
-				
-				scanner.close();
+				// Don't close scanner as we are using System.in . It will close System.in as well.
+				//scanner.close();
 			}else
 			{
 				AdvanceReader.startAdvanceMode(gss);
@@ -200,6 +204,25 @@ public class SuperMQLMain {
 			//gss.shutdownContext();
 		}
 	}
+	
+	Map mActiveStore = new HashMap<String, Object>();
+	
+	private Scanner getScanner()
+	{
+		if(mActiveStore.containsKey(Constants.SCANNER_OBJ))
+		{
+			System.out.println("Reusing Scanner");
+			return (Scanner)mActiveStore.get(Constants.SCANNER_OBJ);
+		}
+		else
+		{
+			System.out.println("Creating new Scanner");
+			Scanner scanner = new Scanner(System.in);
+			mActiveStore.put(Constants.SCANNER_OBJ,scanner);
+			return scanner;
+		}
+	}
+	
 	List myQueries = new ArrayList<String>();
 	private void storeMyQuery(String myQuery)
 	{
