@@ -45,7 +45,7 @@ public class MyQueryReader {
 			//DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			//DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			//doc = docBuilder.parse(xmlFile);
-			doc = getXMLDocument(MODE_XML_UPDATE,xmlFile);
+			doc = getXMLDocument(MODE_XML_READ_UPDATE,xmlFile);
 			
 			doc.getDocumentElement().normalize();
 			
@@ -83,6 +83,28 @@ public class MyQueryReader {
 		}
 
 	}
+	
+	public NodeList getAllQueries() throws ParserConfigurationException, SAXException, IOException
+	{
+		File xmlFile = new File(XML_CONFIG_FILE_NAME);
+		
+		if(xmlFile.exists())
+		{
+			doc = getXMLDocument(MODE_XML_READ_UPDATE,xmlFile);
+			
+			doc.getDocumentElement().normalize();
+			
+			NodeList nlQueries = (NodeList) doc.getElementsByTagName("Queries");	
+			if(nlQueries.getLength()>=1)
+			{
+				Node nQueries =  nlQueries.item(0);
+				return nQueries.getChildNodes();
+			}
+		}
+		
+		return null;
+	}
+	
 	private static void addNewMyQuery(Element eQueries,String strMyQuery,String strNativeQuery)
 	{
 		Element eQuery = doc.createElement("Query");
@@ -95,7 +117,7 @@ public class MyQueryReader {
 	private static void openFileAndCreateElement2(String strFileName,String elementName,String elementValue) throws ParserConfigurationException, SAXException, IOException, TransformerException
 	{
 		File xmlFile = new File(strFileName);
-		Document document = getXMLDocument(MODE_XML_UPDATE,xmlFile);
+		Document document = getXMLDocument(MODE_XML_READ_UPDATE,xmlFile);
         
 		Element superMQLMyQuery = doc.createElement("SuperMQLMyQuery");
         doc.appendChild(superMQLMyQuery);
@@ -114,7 +136,7 @@ public class MyQueryReader {
 	private static void openFileAndCreateElement(String strFileName,String elementName,String elementValue) throws ParserConfigurationException, SAXException, IOException, TransformerException
 	{
 		File xmlFile = new File(strFileName);
-		Document document = getXMLDocument(MODE_XML_UPDATE,xmlFile);
+		Document document = getXMLDocument(MODE_XML_READ_UPDATE,xmlFile);
         
 		NodeList node = document.getElementsByTagName("SuperMQLConfiguration");
 		Element parentNode = (Element) node.item(0);
@@ -126,7 +148,7 @@ public class MyQueryReader {
 	private static void openFileAndUpdateElement(String strFileName,String elementName,String elementValue) throws ParserConfigurationException, SAXException, IOException, TransformerException
 	{
 		File xmlFile = new File(strFileName);
-		Document document = getXMLDocument(MODE_XML_UPDATE,xmlFile);
+		Document document = getXMLDocument(MODE_XML_READ_UPDATE,xmlFile);
         
         updateXMLElement(document,elementName, elementValue);
         
@@ -151,7 +173,7 @@ public class MyQueryReader {
 	}
 	
 	private static String MODE_XML_CREATE = "CREATE";
-	private static String MODE_XML_UPDATE = "UPDATE";
+	private static String MODE_XML_READ_UPDATE = "READ_UPDATE";
 	
 	private static Document getXMLDocument(String sMode,File... xmlFile) throws ParserConfigurationException, SAXException, IOException
 	{

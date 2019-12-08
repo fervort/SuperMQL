@@ -8,6 +8,9 @@ import java.util.List;
 
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
+
+import com.fervort.supermql.myquery.MyQuery;
+
 import org.fusesource.jansi.AnsiConsole;
 import org.jline.reader.Completer;
 import org.jline.reader.EndOfFileException;
@@ -22,6 +25,7 @@ import org.jline.reader.impl.completer.*;
 public class AdvanceReader {
 
 	SuperMQLSupport gss;
+	MyQuery myQuery;
 	
 	public void execute() {
 		
@@ -107,6 +111,16 @@ public class AdvanceReader {
 		}
 		else if(strUserInput.startsWith("myq "))
 		{
+			String strMyQuery = strUserInput.substring(4, strUserInput.length()).trim();
+			System.out.println("MyQuery "+strMyQuery);
+			try
+			{
+				myQuery.processMyQuery(gss,strMyQuery);
+				
+			}catch(Exception ex)
+			{
+				System.out.println(ex);
+			}
 			//storeMyQuery(strUserInput);
 		}
 		
@@ -142,6 +156,7 @@ public class AdvanceReader {
 		
 		this.gss = gss;
 		
+		this.myQuery = new MyQuery();
 		// enable ansi
 		AnsiConsole.systemInstall(); 
 		

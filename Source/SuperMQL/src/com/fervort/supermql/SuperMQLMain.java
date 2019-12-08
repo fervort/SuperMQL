@@ -17,6 +17,7 @@ import javax.xml.transform.TransformerException;
 
 import org.xml.sax.SAXException;
 
+import com.fervort.supermql.myquery.MyQuery;
 import com.fervort.supermql.xml.ConfigReader;
 import com.fervort.supermql.xml.MyQueryReader;
 
@@ -89,6 +90,8 @@ public class SuperMQLMain {
 				int i=1;
 				
 				String strUserInput;
+				
+				MyQuery myQuery = new MyQuery();
 				do
 				{
 					System.out.print("Smql<"+i+">");
@@ -144,7 +147,17 @@ public class SuperMQLMain {
 					}
 					else if(strUserInput.startsWith("myq "))
 					{
-						storeMyQuery(strUserInput);
+						String strMyQuery = strUserInput.substring(4, strUserInput.length()).trim();
+						System.out.println("MyQuery "+strMyQuery);
+						try
+						{
+							myQuery.processMyQuery(gss,strMyQuery);
+							
+						}catch(Exception ex)
+						{
+							System.out.println(ex);
+						}
+						//storeMyQuery(strUserInput);
 					}
 					
 					
