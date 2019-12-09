@@ -1,12 +1,13 @@
 package com.fervort.supermql.myquery;
 
+import java.util.List;
 import java.util.regex.Matcher;
 
 public class MyQueryHolder {
 
 	private String strMyQuery ;
-	private String strNativeQuery;
-	private String strNativeEvaluatedQuery;
+	private List<String> lNativeQuery;
+	private List<String> lNativeEvaluatedQuery;
 	
 	private Matcher matcher;
 	
@@ -18,11 +19,11 @@ public class MyQueryHolder {
 		this.matcher = matcher;
 	}
 	
-	public String getNativeQuery() {
-		return strNativeQuery;
+	public List<String> getNativeQuery() {
+		return lNativeQuery;
 	}
-	public void setNativeQuery(String strNativeQuery) {
-		this.strNativeQuery = strNativeQuery;
+	public void setNativeQuery(List<String> lNativeQuery) {
+		this.lNativeQuery = lNativeQuery;
 	}
 	public String getMyQuery() {
 		return strMyQuery;
@@ -31,11 +32,11 @@ public class MyQueryHolder {
 		this.strMyQuery = strMyQuery;
 	}
 	
-	public String getNativeEvaluatedQuery() {
-		return strNativeQuery;
+	public List<String> getNativeEvaluatedQuery() {
+		return lNativeEvaluatedQuery;
 	}
-	public void setNativeEvaluatedQuery(String strNativeQuery) {
-		this.strNativeQuery = strNativeQuery;
+	public void setNativeEvaluatedQuery(List<String> lNativeEvaluatedQuery) {
+		this.lNativeEvaluatedQuery = lNativeEvaluatedQuery;
 	}
 	
 	

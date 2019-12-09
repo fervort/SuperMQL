@@ -1,7 +1,9 @@
 package com.fervort.supermql.myquery;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,9 +30,19 @@ public class MyQuery {
 	public void processMyQuery(SuperMQLSupport sms,String strFiredMyQuery) throws Exception
 	{
 		MyQueryHolder queryHolder = getMatchingQuery(strFiredMyQuery);
-		String strResult = sms.mql(queryHolder.getNativeEvaluatedQuery());
-		System.out.println("");
-		System.out.println(strResult);
+		
+		List<String> lNativeEvaluatedQuery = queryHolder.getNativeEvaluatedQuery();
+		
+		for (String sEvaluatedQuery : lNativeEvaluatedQuery) {
+			
+			System.out.println("Native: "+sEvaluatedQuery);
+			String strResult = sms.mql(sEvaluatedQuery);
+			System.out.println("");
+			System.out.println(strResult);
+			System.out.println("");
+			System.out.println("");
+		}
+		
 		
 	}
 	public MyQueryHolder getMatchingQuery(String strFiredMyQuery) throws ParserConfigurationException, SAXException, IOException
@@ -42,7 +54,16 @@ public class MyQuery {
 			if (nlQuery.item(i) instanceof Element) {
 			Element nQuery = (Element)nlQuery.item(i);
 			String strMyQuery = nQuery.getElementsByTagName(MyQueryConstants.MY_QUERY).item(0).getTextContent();
-			String strNativeQuery =nQuery.getElementsByTagName(MyQueryConstants.NATIVE_QUERY).item(0).getTextContent();
+			
+			NodeList nlNativeQueries = nQuery.getElementsByTagName(MyQueryConstants.NATIVE_QUERY);
+			
+			List<String> lNativeQueries = new ArrayList<String>();
+			
+			for(int j=0;j<nlNativeQueries.getLength();j++)
+			{
+				Node nNativeQuery = nlNativeQueries.item(j);
+				lNativeQueries.add(nNativeQuery.getTextContent());
+			}
 			
 			String strRegExQuery = getRegExForQuery(formatQuery(strMyQuery)); 
 
@@ -55,10 +76,10 @@ public class MyQuery {
 		    {
 		    	MyQueryHolder mqHolder = new MyQueryHolder();
 		    	mqHolder.setMyQuery(strMyQuery);
-		    	mqHolder.setNativeQuery(strNativeQuery);
+		    	mqHolder.setNativeQuery(lNativeQueries);
 		    	mqHolder.setMatcher(matcher);
 		    	
-		    	mqHolder.setNativeEvaluatedQuery(buildEvaluatedQuery(formatQuery(strNativeQuery), matcher));
+		    	mqHolder.setNativeEvaluatedQuery(buildEvaluatedQueryByList(formatQueryList(lNativeQueries), matcher));
 		    	
 		    	return mqHolder;
 		    }
@@ -67,10 +88,29 @@ public class MyQuery {
 		return null;
 
 	}
-	
+	private List<String> formatQueryList(List<String> lList)
+	{
+		List<String> lFormatedQueries = new ArrayList<String>(); 
+		
+		for (String string : lList) {
+			lFormatedQueries.add(formatQuery(string));
+		}
+		return lFormatedQueries;
+	}
+	// TODO should we replace last occurance of ; with blank ?
 	private String formatQuery(String query)
 	{
-		return SuperUtilities.replaceMultipleSpaceToSingle(query.trim().toLowerCase());
+		return SuperUtilities.replaceMultipleSpaceToSingle(query.trim());
+	}
+	
+	private List<String> buildEvaluatedQueryByList(List<String> lList,Matcher matcher)
+	{
+		List<String> lEvaluatedQueryList = new ArrayList<String>(); 
+		
+		for (String string : lList) {
+			lEvaluatedQueryList.add(buildEvaluatedQuery(string,matcher));
+		}
+		return lEvaluatedQueryList;
 	}
 	
 	private String buildEvaluatedQuery(String nativeQuery,Matcher matcher)
@@ -79,7 +119,7 @@ public class MyQuery {
 		{
 			nativeQuery = nativeQuery.replace("{"+j+"}","\""+matcher.group(j)+"\"");
 		}
-		System.out.println("Native Evaluated Query: "+nativeQuery);
+		//System.out.println("Native Evaluated Query: "+nativeQuery);
 		
 		return nativeQuery;
 	}

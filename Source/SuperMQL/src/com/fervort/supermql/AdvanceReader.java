@@ -112,7 +112,7 @@ public class AdvanceReader {
 		else if(strUserInput.startsWith("myq "))
 		{
 			String strMyQuery = strUserInput.substring(4, strUserInput.length()).trim();
-			System.out.println("MyQuery "+strMyQuery);
+			System.out.println("MyQuery: "+strMyQuery);
 			try
 			{
 				myQuery.processMyQuery(gss,strMyQuery);
