@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -27,7 +28,60 @@ public class MyQuery {
 		 queryReader = new MyQueryReader();
 	}
 
+	
 	public void processMyQuery(SuperMQLSupport sms,String strFiredMyQuery) throws Exception
+	{
+		String strTidyQuery = SuperUtilities.replaceMultipleSpaceToSingle(strFiredMyQuery);
+		
+		if(strTidyQuery.startsWith("add myquery "))
+		{
+			addNewMyQuery(strFiredMyQuery);
+		}else
+		{
+			executeMyQuery(sms,strFiredMyQuery);
+		}
+	}
+	
+	/**
+	 * Synatx is : add myquery <<< myquery >>> === <<< nativequery1 >>>
+	 * TODO : Support adding multiple native query as well as script in XML
+	 * @param strFiredMyQuery
+	 * @throws TransformerException 
+	 * @throws SAXException 
+	 * @throws IOException 
+	 * @throws ParserConfigurationException 
+	 * 
+	 */
+	
+	private void addNewMyQuery(String strFiredMyQuery) throws ParserConfigurationException, IOException, SAXException, TransformerException {
+		
+		String strTidyQuery = SuperUtilities.replaceMultipleSpaceToSingle(strFiredMyQuery);
+		
+		String strNewMyQuery = strTidyQuery.substring(1, strTidyQuery.length());
+		String[] newMyQuery = strNewMyQuery.split("===");
+		
+		if(newMyQuery.length==2)
+		{
+			String myQuery = removeMyQuerySPFix(newMyQuery[0]);
+			String nativeQuery =  removeMyQuerySPFix(newMyQuery[1]);
+			
+			queryReader.addNewMyQuery(myQuery, nativeQuery);
+			
+			System.out.println("New my query added");
+		}else
+		{
+			System.out.println("My query is not a valid "+strTidyQuery);
+			System.out.println("");
+			System.out.println("Syntax: add myquery <<< myquery >>> === <<< nativequery >>>");
+		}
+	}
+	
+	private String removeMyQuerySPFix(String strQuery)
+	{
+		return strQuery.replace("<<<", "").replace(">>>", "").trim();
+	}
+	
+	private void executeMyQuery(SuperMQLSupport sms,String strFiredMyQuery) throws Exception
 	{
 		MyQueryHolder queryHolder = getMatchingQuery(strFiredMyQuery);
 		
@@ -42,9 +96,8 @@ public class MyQuery {
 			System.out.println("");
 			System.out.println("");
 		}
-		
-		
 	}
+	
 	public MyQueryHolder getMatchingQuery(String strFiredMyQuery) throws ParserConfigurationException, SAXException, IOException
 	{
 		NodeList nlQuery = queryReader.getAllQueries();
