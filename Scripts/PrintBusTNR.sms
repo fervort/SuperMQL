@@ -1,0 +1,38 @@
+/**
+*
+* PrintBus.sms
+*
+* SuperMQL script to display type name revision of objects.
+*
+* This script shows, how can we use java to write a script. 
+*
+* You can use java functions, loops etc.
+*
+* You can also mix Java and Groovy syntax. See line number 33.
+*
+*/
+
+// Change type CATProduct in following query if this is not exist in your database.
+String strAllObjects = mql("temp query bus 'CATProduct' * * limit 10 select name revision id description dump |");
+
+// You can use java functions like split
+String[] strObject = strAllObjects.split("\n");
+
+for(int i=0;i<strObject.length;i++)
+{
+	String[] strObjAttr = strObject[i].split("\\|",-1);
+	
+	String strObjName = strObjAttr[3];
+	String strObjRev = strObjAttr[4];
+	String strObjId = strObjAttr[5];
+	
+	// print in java style 
+	System.out.println("Object Name: "+strObjName+" Object Rev: "+strObjRev+" Object Id: "+strObjId);
+	
+	// print in Groovy style
+	println "Object id is: $strObjId ";
+	
+	
+	
+}
+println " End "

@@ -84,7 +84,6 @@ public class SuperMQLMain {
 				
 				printWelcomeMessage();
 				
-				System.out.println("EditorMode : 'basic' is deprecated. It will be removed in next release. Please use advance mode ");
 				System.out.println();
 				
 				int i=1;
@@ -216,15 +215,18 @@ public class SuperMQLMain {
 		// TODO Show tip of the day before starting
 		System.out.println("Welcome to SuperMQL");
 		System.out.println("");
-		System.out.println("To execute native mql start with dot, For ex=> Smql<1>.temp query bus or Smql<3>.print bus");
+		System.out.println("To execute native MQL, start with dot, For ex=> Smql<1>.temp query bus or Smql<3>.print bus");
 		System.out.println("");
 		System.out.println("To execute java/groovy script from file: Smql<1>f D:\\Project\\script\\RenameBus.groovy");
 		System.out.println("");
 		System.out.println("To execute java/groovy script in Interactive mode: Smql<1>i def x = 100; println x;");
 		System.out.println("MQL funcion: Smql<1>i def result=mql('list vault *'); print result");
 		System.out.println("");
-		System.out.println("SuperMQL, Version 0.0.0.alpha");
+		System.out.println("EditorMode : 'basic' is deprecated. It will be removed in next release. Please use advance mode ");
 		System.out.println("");
+		System.out.println("SuperMQL, Version 2.0.0.beta");
+		
+		System.out.println("\n\n\n");
 	}
 
 }

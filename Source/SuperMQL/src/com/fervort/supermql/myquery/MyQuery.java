@@ -57,7 +57,8 @@ public class MyQuery {
 		
 		String strTidyQuery = SuperUtilities.replaceMultipleSpaceToSingle(strFiredMyQuery);
 		
-		String strNewMyQuery = strTidyQuery.substring(1, strTidyQuery.length());
+		String strNewMyQuery = strTidyQuery.substring(12, strTidyQuery.length());
+		System.out.println("Adding :="+strNewMyQuery);
 		String[] newMyQuery = strNewMyQuery.split("===");
 		
 		if(newMyQuery.length==2)
@@ -67,7 +68,8 @@ public class MyQuery {
 			
 			queryReader.addNewMyQuery(myQuery, nativeQuery);
 			
-			System.out.println("New my query added");
+			System.out.println("New my query has been added :) ");
+			System.out.println("");
 		}else
 		{
 			System.out.println("My query is not a valid "+strTidyQuery);

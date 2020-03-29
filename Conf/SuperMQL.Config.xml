@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<SuperMQLConfiguration>
+     
+	 <IsConfigCreated>yes</IsConfigCreated>
+	 
+	 <!-- Enable following configuration only in case advance editor mode is not working.
+	 Default mode is advanced mode. If you haven't enabled following setting means you are using advanced mode.
+	 -->
+	 <!-- <EditorMode>basic</EditorMode> -->
+	 
+</SuperMQLConfiguration>
