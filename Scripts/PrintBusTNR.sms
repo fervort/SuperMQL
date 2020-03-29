@@ -12,27 +12,35 @@
 *
 */
 
+println "Started"
 // Change type CATProduct in following query if this is not exist in your database.
 String strAllObjects = mql("temp query bus 'CATProduct' * * limit 10 select name revision id description dump |");
 
-// You can use java functions like split
-String[] strObject = strAllObjects.split("\n");
-
-for(int i=0;i<strObject.length;i++)
+if(strAllObjects.trim().length()==0)
 {
-	String[] strObjAttr = strObject[i].split("\\|",-1);
-	
-	String strObjName = strObjAttr[3];
-	String strObjRev = strObjAttr[4];
-	String strObjId = strObjAttr[5];
-	
-	// print in java style 
-	System.out.println("Object Name: "+strObjName+" Object Rev: "+strObjRev+" Object Id: "+strObjId);
-	
-	// print in Groovy style
-	println "Object id is: $strObjId ";
-	
-	
-	
+	println "No objects have been found for this type. Please change type in MQL query."
 }
-println " End "
+else
+{
+	// You can use java functions like split
+	String[] strObject = strAllObjects.split("\n");
+
+	for(int i=0;i<strObject.length;i++)
+	{
+		String[] strObjAttr = strObject[i].split("\\|",-1);
+		
+		String strObjName = strObjAttr[3];
+		String strObjRev = strObjAttr[4];
+		String strObjId = strObjAttr[5];
+		
+		// print in java style 
+		System.out.println("Object Name: "+strObjName+" Object Rev: "+strObjRev+" Object Id: "+strObjId);
+		
+		// print in Groovy style
+		println "Object id is: $strObjId ";
+		
+		
+		
+	}
+	println " End "
+}	

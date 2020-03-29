@@ -9,6 +9,7 @@ import java.util.List;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 
+import com.fervort.supermql.log.SuperLog;
 import com.fervort.supermql.myquery.MyQuery;
 
 import org.fusesource.jansi.AnsiConsole;
@@ -73,6 +74,7 @@ public class AdvanceReader {
 			{
 				String filePath = strUserInput.substring(1, strUserInput.length()).trim();
 				// TODO check file is valid ?
+				SuperLog.debug("File path: "+filePath); 
 				String fileContent = new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8); 
 				new GroovyScriptBuilder().buildGroovyScript(gss.getCurrentContext(),fileContent);
 			}catch(Exception ex)

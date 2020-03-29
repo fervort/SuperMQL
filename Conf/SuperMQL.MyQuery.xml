@@ -1,9 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <SuperMQLMyQuery>
      <Queries>
+			
+		  <!-- 
+		  Read more about MyQuery here : https://github.com/fervort/SuperMQL/wiki/My-Query
+		  
+		  
+		  MyQuery to number of count present in database for perticukar type. For example :
+		  myq count obj "Document"
+		  or
+		  myq count obj "CATProduct"
+		  or
+		  myq count obj "Part"
+		  
+		  Note :  Don't forget to enclosed variable string in double quotes like 
+		  myq count obj "Part" . This is invalid MyQuery : myq count obj Part (without double quotes)
+		  -->
           <Query>
-               <MyQuery>count {1} {2} asc {3}</MyQuery>
-               <NativeQuery>temp query bus {1} {3} {2}</NativeQuery>
+               <MyQuery>count obj {1}</MyQuery>
+               <NativeQuery>eval expression 'count true' on temp query bus {1} * *</NativeQuery>
           </Query>
+		  <!-- 
+		  MyQuery to print symbolic name of schema. For example you can execute this MyQuery like this :
+		  myq schema "attribute" "Weight"
+		  or
+		  myq schema "type" "CATProduct"
+		  -->
+		  <Query>
+               <MyQuery>schema {1} {2}</MyQuery>
+               <NativeQuery>list property on program eServiceSchemaVariableMapping.tcl {1} {2}</NativeQuery>
+          </Query>
+		  <!-- List admin types . You can also add multiple native queries
+		  Execute as :
+		  myq list admintypes
+		  -->
+		  <Query>
+               <MyQuery>list admintypes</MyQuery>
+               <NativeQuery>list attribute *</NativeQuery>
+			   <NativeQuery>list type *</NativeQuery>
+          </Query>
+		  
+		  <!-- Like this you can add your own MyQueries -->
      </Queries>
 </SuperMQLMyQuery>

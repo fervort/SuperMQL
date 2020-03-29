@@ -17,6 +17,7 @@ import javax.xml.transform.TransformerException;
 
 import org.xml.sax.SAXException;
 
+import com.fervort.supermql.log.SuperLog;
 import com.fervort.supermql.myquery.MyQuery;
 import com.fervort.supermql.xml.ConfigReader;
 import com.fervort.supermql.xml.MyQueryReader;
@@ -77,6 +78,8 @@ public class SuperMQLMain {
 			
 			ConfigReader.initializeConfiguration();
 			
+			SuperLog.init();
+			
 			if(ConfigReader.readConfigKey("EditorMode").equalsIgnoreCase("basic"))
 			{
 				
@@ -118,6 +121,7 @@ public class SuperMQLMain {
 						try
 						{
 							String filePath = strUserInput.substring(1, strUserInput.length()).trim();
+							SuperLog.debug("File path: "+filePath); 
 							// TODO check file is valid ?
 							String fileContent = new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8); 
 							new GroovyScriptBuilder().buildGroovyScript(context,fileContent);
