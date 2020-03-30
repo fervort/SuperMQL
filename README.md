@@ -63,11 +63,11 @@ If you can't deploy SuperMQL inside kernal, you can also used it as a standalone
 1. Download SuperMQL ZIP package from link provided above.
 2. Extract the ZIP package.
 3. Copy `eMatrixServletRMI.jar` from ENOVIA classpath (It is present in directory `3DSPACE_INSTALLED_DIRECTORY\win_b64\docs\javaserver` and also in TomEE `WEB-INF/lib` folder) and paste into folder `SuperMQL_lib` .
-4. Execute following command from path where `SuperMQL.jar` is located.
+4. Execute following command from path where `SuperMQL.jar` is located. (Replace command with your server URL and credentials)
 ```sh
 java -jar SuperMQL.jar  -login "http://3dspace:8070/internal" "creator" "pass123" "eService Production"
 ```
-5. Make sure that java is in the classpath . If it is not in the classpth you can execute SuperMQL like this.
+5. Make sure that java is in the classpath . If it is not in the classpth, you can execute SuperMQL with complete java path. For example: 
 ```sh
 C:\Program Files\Java\jdk1.8.0_171\bin\java.exe -jar SuperMQL.jar  -login "http://3dspace:8070/internal" "creator" "pass123" "eService Production"
 ```
@@ -82,7 +82,9 @@ C:\Program Files\Java\jdk1.8.0_171\bin\java.exe -jar SuperMQL.jar  -login "http:
 execute program SuperMQL C:\Work\Scripts\ListVaults.groovy;
 ```
 > `ListVaults.groovy` is provided in the ZIP package you have downloaded in last step. 
-
+Also try `PrintBusTNR.sms`, This script demostrate how to use loops and mix groovy and java syntax.
+`NOTE:` On windows environment, if you are getting errors while passing complete file path, try to escape the `backslash` (\\) For example: 
+`execute program SuperMQL C:\\Work\\Scripts\\ListVaults.groovy;`
 
 ### Command line mode : 
 - Start MQL and execute `SuperMQL` JPO like: 
@@ -96,6 +98,8 @@ This command will start SuperMQL in command line mode. Like
 - You can also execute java/groovy script in command line mode using flag `f` (file) like
 ```sh
 Smql<1>f D:\Project\script\RenameBus.groovy
+# on windows environment, you might need to escape backslash. For example: 
+Smql<1>f D:\\Project\\script\\RenameBus.groovy
 ```
 - You can also execute java/groovy script in command line mode using flag `f` (file) like
 - Native MQL can be executed from SuperMQL prompt. Use dot `.` to start a command.
