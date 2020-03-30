@@ -3,7 +3,7 @@ SuperMQL is an extension to existing ENOVIA/3DEXPERIENCE MQL . Using `SuperMQL` 
 
 ## Download latest version
 
-[Latest version v2.0.0.beta](https://github.com/fervort/SuperMQL/files/3797547/SuperMQL.v1.0.0.beta.zip)
+[Latest version v2.0.0.beta](https://github.com/fervort/SuperMQL/files/4405209/SuperMQL.v2.0.0.beta.zip)
 
 ## Shall I learn Groovy to use SuperMQL ?
 No :) . Almost all java synatx are valid groovy syntax. So you can use java code in the script as it is. If you know Groovy then you can combine both the syntax. Check some sample scripts present in github at path [Here ](https://github.com/fervort/SuperMQL/tree/master/Scripts ) 
