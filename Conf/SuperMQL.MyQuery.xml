@@ -5,6 +5,8 @@
 		  <!-- 
 		  Read more about MyQuery here : https://github.com/fervort/SuperMQL/wiki/My-Query
 		  
+		  You don't know where to copy this file ? then start SuperMQL and execute command "config". It 
+		  will show you "config path" . Put this file on the same path. 
 		  
 		  MyQuery to number of count present in database for perticukar type. For example :
 		  myq count obj "Document"
