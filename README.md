@@ -119,3 +119,7 @@ Smql<3>i def result=mql('list type *'); print result ;
 Using SuperMQL, you can create your own query (alias to native `MQLs` ). Check following wiki link for more. 
 
 [Read more about MyQuery here ](https://github.com/fervort/SuperMQL/wiki/My-Query)
+
+## Total Hits
+
+![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg)
