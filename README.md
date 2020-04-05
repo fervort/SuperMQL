@@ -122,4 +122,4 @@ Using SuperMQL, you can create your own query (alias to native `MQLs` ). Check f
 
 ## Total Hits
 
-![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg)
+![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Ffervort%2FSuperMQL)
