@@ -132,6 +132,12 @@ You can quickly test something without writing a SuperMQL script(.sms) or TCL or
 
 [Read more about Interactive Scripts and some examples here ](https://github.com/fervort/SuperMQL/wiki/Interactive-Script)
 
+## Built in functions
+Built in functions are already written functions in SuperMQL. You can use this in SuperMQL Script (.sms) or in interactive script.
+
+[Read more about built in functions here ](https://github.com/fervort/SuperMQL/wiki/Built-in-functions)
+
+
 ## Issues ? Bugs ? New Feature ?
 Have you found issue or bug ? Or do you want any new feature ? Then go to the following link and create a new issue :) 
 
