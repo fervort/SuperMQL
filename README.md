@@ -131,6 +131,12 @@ You can quickly test something without writing TCL script or JPO.
 
 [Read more about Interactive Scripts and some examples here ](https://github.com/fervort/SuperMQL/wiki/Interactive-Script)
 
+## Issues ? Bugs ? New Feature ?
+Have you found issue or bug ? Or do you want any new feature ? Then go to the following link and create a new issue :) 
+
+[Create a issue,bug or request for new feature ](https://github.com/fervort/SuperMQL/issues)
+
+
 ## Total Hits
 
 ![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Ffervort%2FSuperMQL)
