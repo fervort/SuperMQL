@@ -124,6 +124,13 @@ Using SuperMQL, you can create your own query (alias to native `MQLs` ). Check f
 
 [Read more about MyQuery here ](https://github.com/fervort/SuperMQL/wiki/My-Query)
 
+## Interactive Script 
+Interactive Script is way of writing/executing MQLs using programming features like loops conditions and etc. 
+In another word, it is possible to interacte with MQL using programming features like loops, conditions and sysout. 
+You can quickly test something without writing TCL script or JPO.
+
+[Read more about Interactive Scripts and some examples here ](https://github.com/fervort/SuperMQL/wiki/Interactive-Script)
+
 ## Total Hits
 
 ![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Ffervort%2FSuperMQL)
